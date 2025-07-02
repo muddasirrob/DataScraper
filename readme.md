@@ -144,18 +144,4 @@ Author: Muddasir Rob
 
 Email: muddasirrob@gmail.com
 
-Happy Coding ♥️
-vbnet
-Copy
-Edit
 
-If you’d like a downloadable `README.md` file or want me to generate the `datascraper` package structure to match this documentation, just let me know!
-
-
-
-
-
-
-
-
-Ask ChatGPT
