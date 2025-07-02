@@ -1,180 +1,161 @@
-<img src="logo/jobfunnel_banner.svg" alt="JobFunnel Banner" width=400/><br/>
-[![Code Coverage](https://codecov.io/gh/PaulMcInnis/JobFunnel/branch/master/graph/badge.svg)](https://codecov.io/gh/PaulMcInnis/JobFunnel)
+# DataScraper: A Smart, Automatic, Fast and Lightweight Web Scraper for Python
 
-Automated tool for scraping job postings into a `.csv` file.
+![img](https://user-images.githubusercontent.com/17881612/91968083-5ee92080-ed29-11ea-82ec-d99ec85367a5.png)
 
-### Benefits over job search sites:
+This project is made for automatic web scraping to make scraping easy.  
+It gets a URL or the HTML content of a web page and a list of sample data which we want to scrape from that page.  
+**This data can be text, URL, or any HTML tag value of that page.**  
+It learns the scraping rules and returns the similar elements. Then you can use this learned object with new URLs to get similar content or the exact same element from those new pages.
 
-* Never see the same job twice!
-* No advertising.
-* See jobs from multiple job search websites all in one place.
+---
 
-![masterlist.csv][masterlist]
+## 📦 Installation
 
+Compatible with Python 3.
 
-# Installation
-
-_JobFunnel requires [Python][python] 3.11 or later._
-
-```
-pip install git+https://github.com/PaulMcInnis/JobFunnel.git
-```
-
-# Usage
-By performing regular scraping and reviewing, you can cut through the noise of even the busiest job markets.
-
-## Configure
-You can search for jobs with YAML configuration files or by passing command arguments.
-
-Download the demo [settings.yaml][demo_yaml] by running the below command:
-
-```
-wget https://git.io/JUWeP -O my_settings.yaml
-```
-
-_NOTE:_
-* _It is recommended to provide as few search keywords as possible (i.e. `Python`, `AI`)._
-
-* _JobFunnel currently supports `CANADA_ENGLISH`, `USA_ENGLISH`, `UK_ENGLISH`, `FRANCE_FRENCH`, and `GERMANY_GERMAN` locales._
-
-## Scrape
-
-Run `funnel` with your settings YAML to populate your master CSV file with jobs from available providers:
-
-```
-funnel load -s my_settings.yaml
-```
-
-## Review
-
-Open the master CSV file and update the per-job `status`:
-
-* Set to `interested`, `applied`, `interview` or `offer` to reflect your progression on the job.
-
-* Set to `archive`, `rejected` or `delete` to remove a job from this search. You can review 'blocked' jobs within your `block_list_file`.
-
-# Advanced Usage
-
-* **Automating Searches** <br />
-  JobFunnel can be easily automated to run nightly with [crontab][cron] <br />
-  For more information see the [crontab document][cron_doc].
-
-* **Writing your own Scrapers** <br />
-  If you have a job website you'd like to write a scraper for, you are welcome to implement it, Review the [Base Scraper][basescraper] for implementation details.
-
-* **Remote Work** <br />
-  Bypass a frustrating user experience looking for remote work by setting the search parameter `remoteness` to match your desired level, i.e. `FULLY_REMOTE`.
-
-* **Adding Support for X Language / Job Website** <br />
-  JobFunnel supports scraping jobs from the same job website across locales & domains. If you are interested in adding support, you may only need to define session headers and domain strings, Review the [Base Scraper][basescraper] for further implementation details.
-
-* **Blocking Companies** <br />
-  Filter undesired companies by adding them to your `company_block_list` in your YAML or pass them by command line as `-cbl`.
-
-* **Job Age Filter** <br />
-  You can configure the maximum age of scraped listings (in days) by configuring `max_listing_days`.
-
-* **Reviewing Jobs in Terminal** <br />
-  You can review the job list in the command line:
-  ```
-  column -s, -t < master_list.csv | less -#2 -N -S
-  ```
-
-* **Respectful Delaying** <br />
-  Respectfully scrape your job posts with our built-in delaying algorithms.
-
-  To better understand how to configure delaying, check out [this Jupyter Notebook][delay_jp] which breaks down the algorithm step by step with code and visualizations.
-
-* **Recovering Lost Data** <br />
-  JobFunnel can re-build your master CSV from your `cache_folder` where all the historic scrape data is located:
-  ```
-  funnel --recover
-  ```
-
-* **Running by CLI** <br />
-  You can run JobFunnel using CLI only, review the command structure via:
-  ```
-  funnel inline -h
-  ```
- 
-# CAPTCHA
-  JobFunnel does not solve CAPTCHA. If, while scraping, you receive a 
-  `Unable to extract jobs from initial search result page:\` error. 
-  Then open that url on your browser and solve the CAPTCHA manually.
-
-# Developer Guide
-
-For contributors and developers who want to work on JobFunnel, this section will guide you through setting up the development environment and the tools we use to maintain code quality and consistency.
-
-## Developer Mode Installation
-
-To get started, install JobFunnel in **developer mode**. This will install all necessary dependencies, including development tools such as testing, linting, and formatting utilities.
-
-To install JobFunnel in developer mode, use the following command:
+- Install latest version from Git repository using pip:
 
 ```bash
-pip install -e '.[dev]'
-```
+pip install git+https://github.com/muddasirrob/datascraper.git
+Install from PyPI:
 
-This command not only installs the package in an editable state but also sets up pre-commit hooks for automatic code quality checks.
+bash
+Copy
+Edit
+pip install datascraper
+Install from source:
 
-## Pre-Commit Hooks
+bash
+Copy
+Edit
+python setup.py install
+🚀 How to Use
+Getting Similar Results
+Say we want to fetch all related post titles from a StackOverflow page:
 
-The following pre-commit hooks are configured to run automatically when you commit changes to ensure the code follows consistent style and quality guidelines:
+python
+Copy
+Edit
+from datascraper import DataScraper
 
-- `Black`: Automatically formats Python code to ensure consistency.
-- `isort`: Sorts and organizes imports according to the Black style.
-- `Prettier`: Formats non-Python files such as YAML and JSON.
-- `Flake8`: Checks Python code for style guide violations.
+url = 'https://stackoverflow.com/questions/2081586/web-scraping-with-python'
 
-While the pre-commit package is installed when you run `pip install -e '.[dev]'`, you still need to initialize the hooks by running the following command once:
+# Add one or more target elements you want to scrape
+wanted_list = ["What are metaclasses in Python?"]
 
-```bash
-pre-commit install
-```
+scraper = DataScraper()
+result = scraper.build(url, wanted_list)
+print(result)
+Sample output:
 
-### How Pre-Commit Hooks Work
+python
+Copy
+Edit
+[
+    'How do I merge two dictionaries in a single expression in Python (taking union of dictionaries)?', 
+    'How to call an external command?', 
+    'What are metaclasses in Python?', 
+    'Does Python have a ternary conditional operator?', 
+    'How do you remove duplicates from a list whilst preserving order?', 
+    'Convert bytes to a string', 
+    'How to get line count of a large file cheaply in Python?', 
+    "Does Python have a string 'contains' substring method?", 
+    'Why is “1000000000000000 in range(1000000000000001)” so fast in Python 3?'
+]
+Use the same object on another page:
 
-The pre-commit hooks will automatically run when you attempt to make a commit. If any formatting issues are found, the hooks will fix them (for Black and isort), or warn you about style violations (for Flake8). This ensures that all committed code meets the project’s quality standards.
+python
+Copy
+Edit
+scraper.get_result_similar('https://stackoverflow.com/questions/606191/convert-bytes-to-a-string')
+Getting Exact Result
+Say we want to scrape live stock prices from Yahoo Finance:
 
-You can also manually run the pre-commit hooks at any time with:
+python
+Copy
+Edit
+from datascraper import DataScraper
 
-```bash
-pre-commit run --all-files
-```
+url = 'https://finance.yahoo.com/quote/AAPL/'
+wanted_list = ["124.81"]  # update this value as per current data
 
-This is useful to check the entire codebase before committing or as part of a larger code review. Please fix all style guide violations (or provide a reason to ignore) before committing to the repository.
+scraper = DataScraper()
+result = scraper.build(url, wanted_list)
+print(result)
+You can also use proxies or headers:
 
-## Running Tests
+python
+Copy
+Edit
+proxies = {
+    "http": 'http://127.0.0.1:8001',
+    "https": 'https://127.0.0.1:8001',
+}
 
-We use `pytest` to run tests and ensure that the code behaves as expected. Code coverage is automatically generated every time you run the tests.
+result = scraper.build(url, wanted_list, request_args=dict(proxies=proxies))
+Scrape the same type of data from another symbol:
 
-To run all tests, use the following command:
+python
+Copy
+Edit
+scraper.get_result_exact('https://finance.yahoo.com/quote/MSFT/')
+Scraping Multiple Elements
+Example: Scrape GitHub repo details:
 
-```bash
-pytest
-```
+python
+Copy
+Edit
+from datascraper import DataScraper
 
-This will execute the test suite and automatically generate a code coverage report.
+url = 'https://github.com/muddasirrob/datascraper'
+wanted_list = [
+    'A Smart, Automatic, Fast and Lightweight Web Scraper for Python',
+    '6.2k',
+    'https://github.com/muddasirrob/datascraper/issues'
+]
 
-If you want to see a detailed code coverage report, you can run:
+scraper = DataScraper()
+scraper.build(url, wanted_list)
+💾 Saving the Model
+Save the model:
 
-```bash
-pytest --cov-report=term-missing
-```
+python
+Copy
+Edit
+scraper.save('yahoo-finance')
+Load the model later:
 
-This will display which lines of code were missed in the test coverage directly in your terminal output.
+python
+Copy
+Edit
+scraper.load('yahoo-finance')
+📚 Tutorials
+Gist: Advanced Usage
+
+AutoScraper & Flask: Create an API From Any Website in 5 Minutes
+
+❗ Issues
+Feel free to open an issue if you run into any problems using the module.
+
+☕ Support the Project
+<a href="https://www.buymeacoffee.com/muddasirrob" target="_blank"> <img src="https://cdn.buymeacoffee.com/buttons/v2/default-black.png" alt="Buy Me A Coffee" height="45" width="163" > </a>
+📧 Contact
+Author: Muddasir Rob
+
+Email: muddasirrob@gmail.com
+
+Happy Coding ♥️
+vbnet
+Copy
+Edit
+
+If you’d like a downloadable `README.md` file or want me to generate the `datascraper` package structure to match this documentation, just let me know!
 
 
 
-<!-- links -->
-[requirements]:requirements.txt
-[masterlist]:demo/demo.png "masterlist.csv"
-[demo_yaml]:demo/settings.yaml
-[python]:https://www.python.org/
-[basescraper]:jobfunnel/backend/scrapers/base.py
-[cron]:https://en.wikipedia.org/wiki/Cron
-[cron_doc]:docs/crontab/readme.md
-[conc_fut]:https://docs.python.org/dev/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor
-[thread]: https://docs.python.org/3.11/library/threading.html
-[delay_jp]:https://github.com/bunsenmurder/Notebooks/blob/master/jobFunnel/delay_algorithm.ipynb
+
+
+
+
+
+Ask ChatGPT
